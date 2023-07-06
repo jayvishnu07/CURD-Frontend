@@ -1,0 +1,31 @@
+
+.display_task_container{
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+    padding: 10px 0 0 0;
+    gap: 20px;
+    font-size: 13px;
+    flex: 60%;
+    /* overflow-y: scroll; */
+    height: 100%;
+}
+
+.display_task_item_wrapper{
+    width: 100%;
+    display: flex;
+    justify-self: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 10px 20px;
+    border-bottom: 2px solid grey;
+    /* width: 55%; */
+}
+
+.display_task_item{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+}

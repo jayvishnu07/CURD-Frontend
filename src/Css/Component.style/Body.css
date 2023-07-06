@@ -1,0 +1,5 @@
+.body_container{
+    height: 95vh;
+    display: flex;
+    background-color: #FFFFFF;
+}
