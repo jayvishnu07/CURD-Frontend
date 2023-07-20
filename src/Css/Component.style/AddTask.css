@@ -1,5 +1,16 @@
 .main_container{
-    background-color: aqua;
-    width: 60vw;
-    height: 100vh;
+    /* background-color: aqua; */
+    width: 25vw;
+    height: 95vh;
+    position: absolute;
+    left: 0;
+}
+
+.form_container{
+    background-color: blue;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
 }

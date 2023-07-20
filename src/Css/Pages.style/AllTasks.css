@@ -1,0 +1,268 @@
+.inbox_container {
+    height: 100%;
+    padding: 4% 6%;
+    width: 80%;
+    transition: .3s all ease-in-out;
+}
+
+.inbox_container_after {
+    height: 100%;
+    padding: 4% 6%;
+    width: 60%;
+    transition: .3s all ease-in-out;
+}
+
+.inbox_header_container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    height: 5vh;
+}
+
+.filter_icon {
+    display: flex;
+    align-items: center;
+    margin: 0 10px;
+    height: 100%;
+}
+
+
+.inbox_title_container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 20px;
+    padding: 0 0 0 10px;
+    font-weight: 500;
+    height: 100%;
+    flex: 20%;
+}
+
+.show_task_wrapper_in_inbox{
+    flex: 1;
+    height: 85%;
+}
+
+.toggle_with_page_inbox{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+}
+
+
+
+.MuiButtonBase-root {
+    background-color: #8D8B8B !important;
+}
+
+
+
+.show_task_with_page_wrapper {
+    width: 100%;
+    padding: 10px 0 0 0;
+}
+
+
+.loader {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+
+.filter_canvas_inbox {
+    height: 95vh;
+    margin-top: 5vh;
+    background-color: #f5f5f5;
+    border: none !important;
+    width: 25vw !important;
+}
+
+.Offcanvas_body{
+    display: flex;
+    align-self: center;
+    justify-content: flex-start;
+    flex-direction: column;
+    width: 100%;
+}
+
+.canvas_body_inbox {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.canvas_body_item_inbox{
+    border: none;
+    outline: none;
+    height: 4vh;
+    padding: 0 5px;
+    border-radius: 2px;
+    font-size: 14px;
+    width: 80% !important;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    border-radius: 3px;
+}
+.react-datepicker-wrapper{
+    width: 80% !important;
+
+}
+.react-datepicker__input-container{
+    width: 100% !important;
+}
+
+.date_inbox{
+    width: 100% !important;
+}
+.date_inbox{
+    display: flex;
+    justify-content: space-between !important;
+    align-items: center;
+    flex-direction: row-reverse;
+}
+
+.filter_button_inbox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 10px 0;
+}
+
+
+
+.button_wrapper_inbox {
+    width: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    border-radius: 5px;
+    overflow: hidden;
+    height: 4vh;
+}
+
+.button_item {
+    font-size: 12px;
+    background-color: #8D8B8B;
+    color: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    height: 100%;
+    box-shadow: rgba(48, 48, 88, 0.766) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+}
+
+.blur_button_item {
+    font-size: 12px;
+    color: #8D8B8B;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    height: 100%;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+
+}
+
+.MuiPaper-rounded {
+    display: flex !important;
+    flex-direction: row-reverse !important;
+    justify-content: space-between !important;
+}
+
+
+/* search bar */
+
+.search_container_inbox {
+    flex: 80%;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    border-radius: 5px;
+
+}
+
+.search_bar_container_inbox{
+    height: 5vh;
+    width: 100%;
+    display: flex;
+    gap: 5px;
+    overflow: hidden;
+    padding: 0 2px;
+    overflow: hidden;
+}
+
+.search_icons_wrapper_inbox{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* background-color: #8D8B8B; */
+    width: 45px;
+    border-radius: 50%;
+    aspect-ratio: 1 / 1;
+}
+
+.search_input{
+    height: 100%;
+    border: none;
+    outline: none;
+    padding: 0 4px;
+    width: 100%;
+    font-size: 14px;
+}
+
+.diplay_task_wrapper_inbox{
+    display: flex;
+    overflow: hidden;
+    padding: 10px;
+    height: 100%;
+}
+
+
+/* filter */
+.filter_icon_inbox{
+    width: 50px !important;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    display: flex;align-items: center;
+    justify-content: center;
+    transition: .3s all ease-in-out;
+    cursor: pointer;
+}
+
+.filter_icon_inbox_active{
+    background-color: #EEEEEE;
+    width: 50px !important;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    display: flex;align-items: center;
+    justify-content: center;
+    transition: .3s all ease-in-out;
+    cursor: pointer;
+}
+
+.filter_icon_item{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid #8D8B8B;
+    padding: 0 10px;
+    border-radius: 5px;
+
+}
+
+.filter_icon_item_in_sidebar{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 0 10px;
+    border-radius: 5px;
+}

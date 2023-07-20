@@ -1,48 +1,209 @@
-.today_container{
+.today_container {
     height: 100%;
-    padding: 4% 8%;
-    width: 100%;
+    padding: 4% 6%;
+    width: 80%;
     transition: .3s all ease-in-out;
+    /* background-color: aqua; */
 }
 
-.today_container_after{
+.today_container_after {
     height: 100%;
-    padding: 4% 8%;
+    padding: 4% 6%;
     width: 60%;
     transition: .3s all ease-in-out;
 }
 
-.today_title_container{
+.today_header_container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 5vh;
+    width: 100%;
+
+}
+
+.today_title_container {
     display: flex;
     align-self: flex-start;
+    justify-content: flex-start !important;
     font-size: 20px;
-    padding: 0 0 0 10px;
     font-weight: 500;
     gap: 10px;
 }
 
-.button_wrapper{
+
+
+
+.today_search_filter_wrapper {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toggle_button_with_page {
+    display: flex;
+
+}
+
+.toggle_btn {
     width: 35%;
+    display: flex;
+    justify-self: flex-start;
+}
+
+.filter_icon_today {
+    display: flex;
+    align-items: center;
+    margin: 0 10px;
+    height: 100%;
+}
+
+
+/* toggle button */
+
+.button_wrapper_today {
+    width: 12rem;
     display: flex;
     align-items: center;
     justify-content: space-evenly;
     border-radius: 5px;
     overflow: hidden;
+    height: 4vh;
 }
-.button_item{
+
+
+
+.button_item_today {
     font-size: 12px;
-    background-color: #FFA500;
+    background-color: #8D8B8B;
+    color: #f5f5f5;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 50%;
     height: 100%;
     border: 10px;
+    border: 3px solid #8D8B8B;
+    box-shadow: rgba(48, 48, 88, 0.766) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
 }
 
-.blur_button_item{
+.blur_button_item_today {
     font-size: 12px;
-    background-color: #FFA500;
+    color: #8D8B8B;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    height: 100%;
+    border: 10px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+}
+/* --------------------- */
+.button_item_filter_today {
+    font-size: 12px;
+    background-color: #8D8B8B;
+    color: #f5f5f5;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+    height: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+
+}
+
+.filter_button_wrapper_today {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    border-radius: 5px;
+    overflow: hidden;
+
+}
+
+.no_task_container {
+    width: 100%;
+    padding: 20px 0 0 0;
+}
+
+
+.loader {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+
+.today_filter_canvas {
+    height: 95vh;
+    margin-top: 5vh;
+    background-color: #f5f5f5;
+    border: none !important;
+    width: 25vw !important;
+}
+
+.today_canvas_body {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.canvas_body_item {
+    border: none;
+    outline: none;
+    height: 4vh;
+    padding: 0 5px;
+    border-radius: 2px;
+    font-size: 14px;
+    width: 80% !important;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    border-radius: 3px;
+
+}
+
+.filter_button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 10px 0;
+}
+
+.button_wrapper_inbox {
+    width: 80%;
+    align-self: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 0 0 10px 0;
+}
+
+.button_item {
+    font-size: 12px;
+    background-color: #8D8B8B;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    height: 100% !important;
+    border: 10px;
+    padding: 10px;
+}
+/* 
+.blur_button_item {
+    font-size: 12px;
+    background-color: #8D8B8B;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -50,17 +211,113 @@
     height: 100%;
     border: 10px;
     filter: blur(1px);
+    padding: 10px;
+} */
+.diplay_task_wrapper{
+    padding: 0 !important;
 }
 
-.no_task_container{
+.show_task_with_page_wrapper_today {
     width: 100%;
-    padding: 20px 0 0 0;
-}
-
-
-.loader{
-    width: 100%;
+    padding: 10px 0 0 0;
+    height: 80vh !important;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+  }
+  
+  
+
+.toggle_with_page_today{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
 }
+
+.today_title_container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.page_inside{
+    width: 100%;
+}
+.show_task_wrapper_in_today{
+    flex: 1;
+    height: 85%;
+}
+
+#filter_icon_today{
+    width: 50px !important;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: .3s all ease-in-out;
+}
+#filter_icon_today_active{
+    background-color: #EEEEEE;
+    width: 50px !important;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    display: flex;align-items: center;
+    justify-content: center;
+    transition: .3s all ease-in-out;
+}
+
+
+
+/* search bar */
+
+.search_container_today {
+    flex: 80%;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    border-radius: 5px;
+
+}
+
+.search_icons_wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    border-radius: 50%;
+    aspect-ratio: 1 / 1;
+}
+
+.search_input{
+    height: 100%;
+    border: none;
+    outline: none;
+    padding: 0 4px;
+    width: 100%;
+}
+
+.filter_icon_item{
+    display: flex;
+    align-items: center;
+    margin: 0 10px;
+    height: 100%;
+}
+
+.filter_icon_item_in_sidebar{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 0 10px;
+    border-radius: 5px;
+}
+
+.date_inbox_today{
+    display: flex;
+    justify-content: space-between !important;
+    align-items: center;
+    flex-direction: row-reverse;
+    gap: 50%;
+}
+

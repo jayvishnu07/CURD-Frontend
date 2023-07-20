@@ -7,8 +7,8 @@ import Content from './Content'
 const Body = () => {
   return (
     <div className='body_container'>
-        <SideBar />
-        <Content />
+      <SideBar />
+      <Content />
     </div>
   )
 }
