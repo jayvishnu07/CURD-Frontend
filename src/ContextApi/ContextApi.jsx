@@ -1,4 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
+
+//libraries
 import { useLocation } from "react-router-dom";
 
 const taskContext = createContext();
@@ -10,20 +12,15 @@ const TaskContextProvider = ({ children }) => {
     })
 
     const [showSidebar, setShowSidebar] = useState(true);
-    const [showTaskDescription, setShowTaskDescription] = useState(false);
-    const [showTaskDescriptionId, setShowTaskDescriptionId] = useState();
+    const [showTaskDetails, setShowTaskDetails] = useState(false);
+    const [selectedTask, setSelectedTask] = useState([])
     const [showInboxFilter, setShowInboxFilter] = useState(false);
     const [showTodayFilter, setShowTodayFilter] = useState(false);
     const [showUpcomingFilter, setShowUpcomingFilter] = useState(false);
-
     const [editMode, setEditMode] = useState(false)
-
     const [task, setTask] = useState(null)
     const [recentEditHappen, setRecentEditHappen] = useState(false)
-
-
     const [currentUrl, setCurrentUrl] = useState('/')
-
     const [showAddTask, setShowAddTask] = useState(false);
 
     const url = useLocation();
@@ -43,10 +40,10 @@ const TaskContextProvider = ({ children }) => {
             value={{
                 showSidebar,
                 setShowSidebar,
-                showTaskDescription,
-                showTaskDescriptionId,
-                setShowTaskDescription,
-                setShowTaskDescriptionId,
+                selectedTask,
+                setSelectedTask,
+                showTaskDetails,
+                setShowTaskDetails,
                 task,
                 setTask,
                 showInboxFilter,

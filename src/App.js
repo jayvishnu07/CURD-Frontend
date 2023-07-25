@@ -1,24 +1,17 @@
+import React from 'react'
+
+//style sheets
 import './App.css';
+
+//custom components
+import { ContextState } from './ContextApi/ContextApi.jsx';
 import Body from './Components/Body';
 import Navbar from './Components/Navbar';
-import Login from './Components/Login';
-import { ContextState } from './ContextApi/ContextApi.jsx';
-import { useEffect, useState } from 'react';
+import Login from './Pages/Login.jsx';
 
-
-
-function App() {
+const App = () => {
 
   const { userName } = ContextState();
-
-
-  const [user, setUser] = useState('');
-
-  useEffect(() => {
-    setUser(localStorage.getItem('userName'))
-    console.log("logged");
-  }, [userName])
-
 
   return (
     <div className="App">
@@ -32,11 +25,9 @@ function App() {
           :
           <Login />
       }
-
     </div>
   );
 }
-
 export default App;
 
 // https://todoist.com/app/today

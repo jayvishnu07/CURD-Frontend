@@ -1,0 +1,42 @@
+
+.filter_canvas {
+    height: 95vh;
+    margin-top: 5vh;
+    background-color: #f5f5f5;
+    border: none !important;
+    width: 25vw !important;
+}
+
+.today_filter_canvas {
+    height: 95vh;
+    margin-top: 5vh;
+    background-color: #f5f5f5;
+    border: none !important;
+    width: 25vw !important;
+}
+
+.filter_icon_item{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 0 10px;
+    border: none;
+}
+
+
+.Offcanvas_body{
+    display: flex;
+    align-self: center;
+    justify-content: flex-start;
+    flex-direction: column;
+    width: 100%;
+}
+
+.filter_button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 10px 0;
+}

@@ -1,0 +1,40 @@
+.diplay_task_wrapper{
+    padding: 0 !important;
+}
+
+.diplay_task_wrapper{
+    padding: 0 !important;
+}
+
+.show_task_with_page_wrapper {
+    width: 100%;
+    padding: 10px 0 0 0;
+    height: 80vh !important;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  
+
+.toggle_with_page{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.today_toggle_container{
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.page_inside{
+    width: 100%;
+}
+.show_task_wrappers{
+    flex: 1;
+    height: 85%;
+}

@@ -1,22 +1,28 @@
-import React from 'react'
-import '../Css/Component.style/Content.css'
+import React from 'react';
+
+//libraries
 import { Routes, Route } from 'react-router-dom';
-import Inbox from '../Pages/AllTasks';
+
+//style sheets
+import '../Css/Component.style/Content.css';
+
+//custom components
+import AllTask from '../Pages/AllTasks';
 import Today from '../Pages/Today';
 import Upcoming from '../Pages/Upcoming';
-import ShowTaskDescription from './ShowTaskDescription';
+import ShowTaskDetails from './ShowTaskDetails';
 
 const Content = () => {
   return (
     <div className='content_container'>
       <Routes>
-        <Route path='/' element={<Inbox />} />
+        <Route path='/' element={<AllTask />} />
         <Route path='/today' element={<Today />} />
         <Route path='/upcoming' element={<Upcoming />} />
       </Routes>
-      <ShowTaskDescription />
+      <ShowTaskDetails />
     </div>
-  )
-}
+  );
+};
 
-export default Content
+export default Content;

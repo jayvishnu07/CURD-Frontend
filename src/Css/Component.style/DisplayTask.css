@@ -1,159 +1,127 @@
 .display_task_container{
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    flex-direction: column;
-    padding: 10px 0 0 0;
-    font-size: 13px;
-    flex: 1;
-    height: 100% !important;
-    overflow-y: scroll;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-direction: column;
+  padding: 10px 0 0 0;
+  font-size: 13px;
+  flex: 1;
+  height: 70vh !important;
+  overflow-y: scroll;
 }
 
 
-
-
 .display_task_item_wrapper{
-    width: 100%;
-    display: flex;
-    justify-self: space-between;
-    align-items: center;
-    padding: 0px 20px;
+  width: 100%;
+  display: flex;
+  justify-self: space-between;
+  align-items: center;
+  padding: 0px 20px;
 }
 
 
 .display_task_item_container{
-    width: 100%;
-    display: flex;
-    justify-self: flex-start;
-    align-items: center;
-    padding: 20px 0px 0 0;
-    border-bottom: 2px solid grey;
+  width: 100%;
+  display: flex;
+  justify-self: flex-start;
+  align-items: center;
+  padding: 20px 0px 0 0;
+  border-bottom: 2px solid grey;
 }
 
 .display_task_item_container_active{
-    width: 100%;
-    display: flex;
-    justify-self: flex-start;
-    align-items: center;
-    padding: 20px 0px 0 0;
-    border-bottom: 2px solid grey;
-    
-    background-color: #FAFAFA;
+  width: 100%;
+  display: flex;
+  justify-self: flex-start;
+  align-items: center;
+  padding: 20px 0px 0 0;
+  border-bottom: 2px solid grey;
+  background-color: #F5F5F5;
 }
 
 .display_content_div{
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    flex-direction: column;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
 }
 
 .display_delete_btn_div{
-    flex: 10%;
+  flex: 10%;
 }
 
 
 .display_task_item{
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
 }
 
 .tooltip {
-    position: relative;
-    display: inline-block;
-    opacity: 1;
-    z-index: 100;
-  }
-  
-  .tooltip-text {
-    width: 200px;
-    visibility: hidden;
-    background-color: #d3d3d3;
-    color: #000;
-    text-align: center;
-    border-radius: 4px;
-    padding: 5px;
-    position: absolute;
-    z-index: 1;
-    top: 125%;
-    left: 50%;
-    transform: translateX(-50%);
-    opacity: 0;
-    transition: opacity 0.3s;
-    z-index: 100;
-  }
-  
-  .tooltip:hover .tooltip-text {
-    visibility: visible;
-    opacity: 1;
-    z-index: 100;
-  }
-  
-  .no_task_container{
-    /* background-color: aqua; */
-    /* border: 2px solid red; */
-    font-size: 15px;
-  }
+  position: relative;
+  display: inline-block;
+  opacity: 1;
+  z-index: 100;
+}
 
-  /* delete model */
+.tooltip-text {
+  width: 200px;
+  visibility: hidden;
+  background-color: #d3d3d3;
+  color: #000;
+  text-align: center;
+  border-radius: 4px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  top: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 100;
+}
 
-  .confirmation-modal {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.027);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000000;
-    /* pointer-events: none; */
-    cursor: not-allowed;
-  }
-  
-  .confirmation-content {
-    background-color: #FFFFFF;
-    width: 30vw;
-    height: 20vh;
-    padding: 20px;
-    border-radius: 5px;
-    text-align: center;
-    cursor: auto;
-  }
-  
-  .confirmation-content h3 {
-    margin-top: 0;
-  }
-  
-  .confirmation-buttons button {
-    margin: 0 10px;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .delete-button {
-    background-color: #ff4444;
-    color: #fff;
-    border: none;
-    outline: none;
-  }
-  
-  .cancel-button {
-    background-color: #ddd;
-    border: none;
-    outline: none;
-  }
+.tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+  z-index: 100;
+}
 
-  #delete_model_title{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
+.no_task_container{
+  font-size: 15px;
+  width: 100%;
+}
+
+.confirmation-content h3 {
+  margin-top: 0;
+}
+
+.confirmation-buttons button {
+  margin: 0 10px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.delete_button {
+  background-color: #ff4444;
+  color: #fff;
+  border: none;
+  outline: none;
+}
+
+.cancel_button {
+  background-color: #ddd;
+  border: none;
+  outline: none;
+}
+
+#delete_model_title{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 

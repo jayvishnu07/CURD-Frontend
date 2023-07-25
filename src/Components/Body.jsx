@@ -1,7 +1,11 @@
 import React from 'react'
+
+//style sheets
 import '../Css/Component.style/Body.css'
-import SideBar from './SideBar'
+
+//custom components
 import Content from './Content'
+import SideBar from "./SideBar"
 
 
 const Body = () => {

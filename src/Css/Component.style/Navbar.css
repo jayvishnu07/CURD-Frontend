@@ -46,17 +46,13 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    /* height: 60%; */
     gap: 20px;
 }
-
 
 
 .date_in_add_task {
     width: 100% !important;
 }
-
-.Offcanvas_body_navbar {}
 
 .form_input_items_navbar {
     width: 80%;
@@ -132,4 +128,12 @@
 .profile_item:hover {
     color: #ffff;
     background-color: rgb(179, 179, 179);
+}
+
+.add_task_offcanvas{
+    height: 95vh;
+    margin-top: 5vh;
+    border: none !important;
+    background-color: #f5f5f5;
+    width: 25vw !important;
 }

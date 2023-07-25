@@ -13,23 +13,24 @@ nav::-webkit-scrollbar {
     justify-content: center;
     transition: .3s all ease-in-out;
     width: 100%;
+    gap: 5px;
 }
 
-/* 
-.width {
-    width: 35vw !important;
-    transition: .3s all ease-in-out !important;
-}
- */
-
-
-.pagination .page-link {
+.page_item{
+    padding: 7px 5px;
+    border: 1px solid #DBDCDC;
+    border-radius: 5px;
     color: #8D8B8B !important;
+    width: 35px;
 
 }
 
 
-.pagination .active {
+.active {
     color: #FFFF !important;
     background-color: #8D8B8B !important;
+    padding: 7px 5px;
+    border: 1px solid #DBDCDC;
+    border-radius: 5px;
+    width: 35px;
 }

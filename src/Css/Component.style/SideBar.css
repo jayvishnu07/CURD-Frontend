@@ -67,17 +67,6 @@
     border: 1px solid #FFA500;
 }
 
-
-
-.add_task_offcanvas{
-    height: 95vh;
-    margin-top: 5vh;
-    border: none !important;
-    background-color: #f5f5f5;
-    width: 25vw !important;
-}
-
-
 .form{
     width: 100%;
     display: flex;
@@ -110,6 +99,6 @@
     border: 1px solid #fff;
     border-radius: 50%;
 }
-.active{
+.active_sidebar{
     background-color: #EEEEEE;
 }

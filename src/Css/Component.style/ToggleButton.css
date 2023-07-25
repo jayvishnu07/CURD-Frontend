@@ -1,0 +1,36 @@
+.toggle_button_wrapper {
+    width: 12rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    border-radius: 5px;
+    overflow: hidden;
+    height: 4vh;
+}
+
+.toggle_button_item {
+    font-size: 12px;
+    background-color: #8D8B8B;
+    color: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    height: 100%;
+    border: 10px;
+    border: 3px solid #8D8B8B;
+    box-shadow: rgba(48, 48, 88, 0.766) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+}
+
+.disabled_toggle_button_item {
+    font-size: 12px;
+    color: #8D8B8B;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    height: 100%;
+    border: 10px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+}

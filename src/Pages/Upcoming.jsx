@@ -1,295 +1,124 @@
 import React, { useEffect, useState } from 'react'
-import '../Css/Pages.style/Upcoming.css'
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
-import { ContextState } from "../ContextApi/ContextApi";
+
+//libraries
 import axios from 'axios'
-
-import DisplayTask from "../Components/DisplayTask";
-import Pagination from "../Components/Pagination";
-import 'react-responsive-pagination/themes/classic.css';
-import { TbAdjustmentsHorizontal } from 'react-icons/tb';
-import { Button, Offcanvas } from 'react-bootstrap';
-import { LuSearch } from 'react-icons/lu';
-import { RxCross1 } from 'react-icons/rx';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
+import moment from 'moment-timezone';
 import DatePicker from "react-datepicker";
 
-import { css } from 'glamor';
+//style sheets
+import '../Css/Pages.style/Upcoming.css'
+import 'react-loading-skeleton/dist/skeleton.css'
+import 'react-responsive-pagination/themes/classic.css';
+
+//react icons
+import { TbAdjustmentsHorizontal } from 'react-icons/tb';
+
+//custom components
+import { ContextState } from "../ContextApi/ContextApi";
+import ShowToast from '../Components/ShowToast';
+import Filter from '../Components/Filter';
+import ToggleButton from '../Components/ToggleButton';
+import SearchBar from '../Components/SearchBar';
+import TaskDisplayWithPagination from '../Components/TaskDisplayWithPagination';
 
 
 const Upcoming = () => {
 
-  const { userName, showTaskDescription, task, setTask, setShowTaskDescription, showUpcomingFilter, setShowUpcomingFilter, recentEditHappen } = ContextState();
-
-  const [datetoggleOption, setDateToggleOption] = useState(true);
-  const [toOrBytoggleOption, setToOrBytoggleOption] = useState(true);
-
-  const [filterToggleOption, setFilterToggleOption] = useState(true);
-  const [searchInput, setSearchInput] = useState("");
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const [taskPerPage] = useState(10);
-
-  const [taskCount, setTaskCount] = useState(0);
-
+  const {
+    userName,
+    showTaskDetails,
+    task,
+    setTask,
+    setShowTaskDetails,
+    showUpcomingFilter,
+    setShowUpcomingFilter,
+    recentEditHappen,
+  } = ContextState();
 
   const [date, setDate] = useState('');
-  const [duplicateDate, setDuplicateDate] = useState(null);
-
+  const [searchInput, setSearchInput] = useState("");
+  const [count, setCount] = useState(0);
   const [assignedBy, setAssignedBy] = useState('')
   const [assignedTo, setAssignedTo] = useState('')
 
+  // turn on filter button
   const [isFilterOn, setIsFilterOn] = useState(false)
+
+  //pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [taskPerPage] = useState(10);
+
+  //toggle button
+  const [toOrBytoggleOption, setToOrBytoggleOption] = useState(true);
+  const [filterToggleOption, setFilterToggleOption] = useState(true);
+
+  //duplicate date to show in datepicker
+  const [duplicateDate, setDuplicateDate] = useState(null);
+
+  //state to disable enter button 
+  const [isDisabled, setIsDisabled] = useState(true)
 
 
   const handleCloseFilter = () => setShowUpcomingFilter(false)
 
+  //Get all tasks
   const getTasks = () => {
     const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-    const day = String(currentDate.getDate()).padStart(2, '0');
-    const formattedDate = `${year}-${month}-${day}`;
-
-    console.log("formatted = > " + formattedDate);
-    console.log("looooooooooooooooooged");
-    // if (toOrBytoggleOption && datetoggleOption) {
-    //   axios.get(`http://localhost:8080/api/v2/tasks/starts-after/${formattedDate}?to=${userName}&page=${currentPage}&pageSize=${taskPerPage}`)
-    //     .then((res) => { setTask(res?.data?.data); setTaskCount(res?.data?.count); console.log(res?.data?.data); })
-    //     .catch((err) => {
-    //       toast.error(<b style={{ color: "#000" }} >{err.response?.data?.message}</b>, {
-    //         className: css({
-    //           background: "#pink"
-    //         })
-    //       }, {
-    //         position: "top-center",
-    //         autoClose: 1500,
-    //         hideProgressBar: false,
-    //         closeOnClick: true,
-    //         pauseOnHover: true,
-    //         draggable: true,
-    //         progress: true,
-    //         theme: "colored",
-    //       });
-    //     })
-    // }
-    // else if (!toOrBytoggleOption && datetoggleOption) {
-    //   axios.get(`http://localhost:8080/api/v2/tasks/starts-after/${formattedDate}?by=${userName}&page=${currentPage}&pageSize=${taskPerPage}`)
-    //     .then((res) => { setTask(res?.data?.data); setTaskCount(res?.data?.count); console.log(res?.data?.data); })
-    //     .catch((err) => {
-    //       toast.error(<b style={{ color: "#000" }} >{err.response?.data?.message}</b>, {
-    //         className: css({
-    //           background: "#pink"
-    //         })
-    //       }, {
-    //         position: "top-center",
-    //         autoClose: 1500,
-    //         hideProgressBar: false,
-    //         closeOnClick: true,
-    //         pauseOnHover: true,
-    //         draggable: true,
-    //         progress: true,
-    //         theme: "colored",
-    //       });
-    //     })
-    // }
-    // else if (toOrBytoggleOption && !datetoggleOption) {
-    //   console.log("currentPage = ?", currentPage);
-    //   console.log("taskPerPage = ?", taskPerPage);
-    //   axios.get(`http://localhost:8080/api/v2/tasks/ends-after/${formattedDate}?to=${userName}&page=${currentPage}&pageSize=${taskPerPage}`)
-    //     .then((res) => { setTask(res?.data?.data); setTaskCount(res?.data?.count); console.log(res?.data?.data); })
-    //     .catch((err) => {
-    //       console.log(err.response?.data);
-    //       toast.error(<b style={{ color: "#000" }} >{err.response?.data?.message}</b>, {
-    //         className: css({
-    //           background: "#pink"
-    //         })
-    //       }, {
-    //         position: "top-center",
-    //         autoClose: 1500,
-    //         hideProgressBar: false,
-    //         closeOnClick: true,
-    //         pauseOnHover: true,
-    //         draggable: true,
-    //         progress: true,
-    //         theme: "colored",
-    //       });
-    //     })
-    // }
-    // else if (!toOrBytoggleOption && !datetoggleOption) {
-    //   axios.get(`http://localhost:8080/api/v2/tasks/ends-after/${formattedDate}?by=${userName}&page=${currentPage}&pageSize=${taskPerPage}`)
-    //     .then((res) => { setTask(res?.data?.data); setTaskCount(res?.data?.count); console.log(res?.data?.data); })
-    //     .catch((err) => {
-    //       toast.error(<b style={{ color: "#000" }} >{err?.response?.data?.message}</b>, {
-    //         className: css({
-    //           background: "#pink"
-    //         })
-    //       }, {
-    //         position: "top-center",
-    //         autoClose: 1500,
-    //         hideProgressBar: false,
-    //         closeOnClick: true,
-    //         pauseOnHover: true,
-    //         draggable: true,
-    //         progress: true,
-    //         theme: "colored",
-    //       });
-    //     })
-    // }
+    const formattedDate = moment(currentDate).format('YYYY-MM-DD');
 
     if (toOrBytoggleOption) {
-      axios.get(`http://localhost:8080/api/v2/tasks/starts-after/${formattedDate}?to=${userName}&page=${currentPage}&pageSize=${taskPerPage}`)
-        .then((res) => { setTask(res?.data?.data); setTaskCount(res?.data?.count); console.log(res?.data?.data); })
+      axios.get(`/v2/tasks/starts-after/${formattedDate}?to=${userName}&page=${currentPage}&pageSize=${taskPerPage}`)
+        .then((res) => { setTask(res.data.data); setCount(res.data.count); })
         .catch((err) => {
-          toast.error(<b style={{ color: "#000" }} >{err.response?.data?.message}</b>, {
-            className: css({
-              background: "#pink"
-            })
-          }, {
-            position: "top-center",
-            autoClose: 1500,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: true,
-            theme: "colored",
-          });
+          ShowToast({ message: `${err.response.data.message}`, type: 'error' });
         })
     }
     else if (!toOrBytoggleOption) {
-      axios.get(`http://localhost:8080/api/v2/tasks/starts-after/${formattedDate}?by=${userName}&page=${currentPage}&pageSize=${taskPerPage}`)
-        .then((res) => { setTask(res?.data?.data); setTaskCount(res?.data?.count); console.log(res?.data?.data); })
+      axios.get(`/v2/tasks/starts-after/${formattedDate}?by=${userName}&page=${currentPage}&pageSize=${taskPerPage}`)
+        .then((res) => { setTask(res.data.data); setCount(res.data.count); })
         .catch((err) => {
-          toast.error(<b style={{ color: "#000" }} >{err.response?.data?.message}</b>, {
-            className: css({
-              background: "#pink"
-            })
-          }, {
-            position: "top-center",
-            autoClose: 1500,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: true,
-            theme: "colored",
-          });
+          ShowToast({ message: `${err.response.data.message}`, type: 'error' });
         })
     }
-
-
   }
 
-
+  //Get searched tasks
   const getTaskBySearchInput = () => {
     const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-    const day = String(currentDate.getDate()).padStart(2, '0');
-    const formattedDate = `${year}-${month}-${day}`;
+    const formattedDate = moment(currentDate).format('YYYY-MM-DD');
 
-    console.log("formatted = > " + formattedDate);
     setCurrentPage(1);
 
-    console.log("getting in");
-
     if (toOrBytoggleOption) {
-      axios.get(`http://localhost:8080/api/v1/tasks/upcoming/created/title/${searchInput}?created=${formattedDate}&to=${userName}&page=${currentPage}&pageSize=${taskPerPage}`)
-        .then((res) => { setTask(res?.data?.data); setTaskCount(res?.data?.count); console.log(`http://localhost:8080/api/v1/tasks/upcoming/created/title/${searchInput}?created=${formattedDate}&to=${userName}&page=${currentPage}&pageSize=${taskPerPage}  `, res?.data?.data); })
+      axios.get(`/v1/tasks/upcoming/created/title/${searchInput}?created=${formattedDate}&to=${userName}&page=${currentPage}&pageSize=${taskPerPage}`)
+        .then((res) => { setTask(res.data.data); setCount(res.data.count); })
         .catch((err) => {
-          toast.error(<b style={{ color: "#000" }} >{err.response?.data?.message}</b>, {
-            className: css({
-              background: "#pink"
-            })
-          }, {
-            position: "top-center",
-            autoClose: 1500,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: true,
-            theme: "colored",
-          });
+          ShowToast({ message: `${err.response.data.message}`, type: 'error' });
         })
     }
     else if (!toOrBytoggleOption) {
-      axios.get(`http://localhost:8080/api/v1/tasks/upcoming/created/title/${searchInput}?created=${formattedDate}&by=${userName}&page=${currentPage}&pageSize=${taskPerPage}`)
-        .then((res) => { setTask(res?.data?.data); setTaskCount(res?.data?.count); console.log(`http://localhost:8080/api/v1/tasks/upcoming/created/title/${searchInput}?created=${formattedDate}&by=${userName}&page=${currentPage}&pageSize=${taskPerPage}  `, res?.data?.data); })
+      axios.get(`/v1/tasks/upcoming/created/title/${searchInput}?created=${formattedDate}&by=${userName}&page=${currentPage}&pageSize=${taskPerPage}`)
+        .then((res) => { setTask(res.data.data); setCount(res.data.count); })
         .catch((err) => {
-          toast.error(<b style={{ color: "#000" }} >{err.response?.data?.message}</b>, {
-            className: css({
-              background: "#pink"
-            })
-          }, {
-            position: "top-center",
-            autoClose: 1500,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: true,
-            theme: "colored",
-          });
+          ShowToast({ message: `${err.response.data.message}`, type: 'error' });
         })
     }
   }
 
 
-  useEffect(() => {
-    console.log("Hererererererereererer");
-    if (searchInput) {
-      console.log("looged => ", searchInput);
-      getTaskBySearchInput();
-    }
-    else if (isFilterOn) {
-      handleFilterClick()
-    }
-    else {
-      getTasks()
-    }
-  }, [searchInput, currentPage, toOrBytoggleOption, recentEditHappen])
-
-  //PAGINATION
-  const indexOfLastPost = currentPage * taskPerPage;
-  const indexOfFirstPost = indexOfLastPost - taskPerPage;
-  const currentTasks = task && task.slice(indexOfFirstPost, indexOfLastPost);
-
-  // Change page
-  const paginate = pageNumber => setCurrentPage(pageNumber);
-
-  const ToggleButtonForToMeOrByMe = () => {
-    return (<>
-      <div className='button_wrapper_upcoming' id="pointer" >
-        <div className={toOrBytoggleOption ? "button_item_upcoming" : "blur_button_item_upcoming"} onClick={() => { setCurrentPage(1); setToOrBytoggleOption(true) }} > Task to me </div>
-        <div className={toOrBytoggleOption ? "blur_button_item_upcoming" : "button_item_upcoming"} onClick={() => { setCurrentPage(1); setToOrBytoggleOption(false) }} > Task by me </div>
-      </div>
-    </>)
+  //Toggel button [ Task to me | Task by me ]
+  const handleToOrBytoggleOption = () => {
+    setCurrentPage(1);
+    setIsFilterOn(false);
+    setToOrBytoggleOption((prev) => !prev)
   }
 
-  const ToggleButtonForStartEndDate = () => {
-    return (<>
-      <div className='button_wrapper_today' id="pointer" >
-        <div className={datetoggleOption ? "button_item_upcoming" : "blur_button_item_upcoming"} onClick={() => { setDateToggleOption(true) }} > Starting </div>
-        <div className={datetoggleOption ? "blur_button_item_upcoming" : "button_item_upcoming"} onClick={() => { setDateToggleOption(false) }} > Ending </div>
-      </div>
-    </>)
+  // Filter toggel button [ Assigned date | Deadline ]
+  const handleFilterToggleButton = () => {
+    setFilterToggleOption((prev) => !prev)
   }
 
-  const FilterToggleButton = () => {
-    return (<>
-      <div className='filter_button_wrapper_upcoming' id="pointer">
-        <div className={filterToggleOption ? "button_item_upcoming" : "blur_button_item_upcoming"} onClick={() => { setFilterToggleOption(true) }} > Assigned date </div>
-        <div className={filterToggleOption ? "blur_button_item_upcoming" : "button_item_upcoming"} onClick={() => { setFilterToggleOption(false) }} > Deadline </div>
-      </div>
-    </>)
-  }
-
-
+  // Function to handle filter
   const handleFilterClick = () => {
     setIsFilterOn(true);
     setShowUpcomingFilter(false)
@@ -297,219 +126,130 @@ const Upcoming = () => {
       getTasks();
       setIsFilterOn(false)
       setShowUpcomingFilter(false)
-      toast.info(<b style={{ color: "#000" }} >No filters were given.</b>, {
-        className: css({
-          background: "#pink"
-        })
-      }, {
-        position: "top-center",
-        autoClose: 1500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: true,
-        theme: "colored",
-      });
-
     }
 
     if (date || assignedBy || assignedTo) {
       toOrBytoggleOption && filterToggleOption
         ?
-        (axios.get(`http://localhost:8080/api/v2/tasks/created?created=${date}&by=${assignedBy}&to=${userName}&page=${currentPage}&pageSize=${taskPerPage}`)
-          .then((res) => { setTask(res?.data?.data); setTaskCount(res?.data?.count); console.log(`http://localhost:8080/api/v1/tasks/created?created=${date}&by=${assignedBy}&to=${userName}&page=${currentPage}&pageSize=${taskPerPage} `, res?.data); })
+        (axios.get(`/v2/tasks/created?created=${date}&by=${assignedBy}&to=${userName}&page=${currentPage}&pageSize=${taskPerPage}`)
+          .then((res) => { setTask(res.data.data); setCount(res.data.count); })
           .catch((err) => {
-            toast.error(<b style={{ color: "#000" }} >{err.response?.data?.message}</b>, {
-              className: css({
-                background: "#pink"
-              })
-            }, {
-              position: "top-center",
-              autoClose: 1500,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: true,
-              theme: "colored",
-            });
+            ShowToast({ message: `${err.response.data.message}`, type: 'error' });
           }))
         :
         toOrBytoggleOption && !filterToggleOption
           ?
-          (axios.get(`http://localhost:8080/api/v2/tasks/due?due=${date}&by=${assignedBy}&to=${userName}&page=${currentPage}&pageSize=${taskPerPage}`)
-            .then((res) => { setTask(res?.data?.data); setTaskCount(res?.data?.count); console.log(`http://localhost:8080/api/v1/tasks/due?due=${date}&by=${assignedBy}&to=${userName}&page=${currentPage}&pageSize=${taskPerPage} `, res?.data?.data); })
+          (axios.get(`/v2/tasks/due?due=${date}&by=${assignedBy}&to=${userName}&page=${currentPage}&pageSize=${taskPerPage}`)
+            .then((res) => { setTask(res.data.data); setCount(res.data.count); })
             .catch((err) => {
-              toast.error(<b style={{ color: "#000" }} >{err.response?.data?.message}</b>, {
-                className: css({
-                  background: "#pink"
-                })
-              },
-                {
-                  position: "top-center",
-                  autoClose: 1500,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: true,
-                  theme: "colored",
-                });
+              ShowToast({ message: `${err.response.data.message}`, type: 'error' });
             }))
           :
           !toOrBytoggleOption && filterToggleOption
             ?
-            (axios.get(`http://localhost:8080/api/v2/tasks/created?created=${date}&by=${userName}&to=${assignedTo}&page=${currentPage}&pageSize=${taskPerPage}`)
-              .then((res) => { setTask(res?.data?.data); setTaskCount(res?.data?.count); console.log(`http://localhost:8080/api/v1/tasks/created?created=${date}&by=${userName}&to=${assignedTo}&page=${currentPage}&pageSize=${taskPerPage}  `, res?.data?.data); })
+            (axios.get(`/v2/tasks/created?created=${date}&by=${userName}&to=${assignedTo}&page=${currentPage}&pageSize=${taskPerPage}`)
+              .then((res) => { setTask(res.data.data); setCount(res.data.count); })
               .catch((err) => {
-                toast.error(<b style={{ color: "#000" }} >{err.response?.data?.message}</b>, {
-                  className: css({
-                    background: "#pink"
-                  })
-                }, {
-                  position: "top-center",
-                  autoClose: 1500,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: true,
-                  theme: "colored",
-                });
+                ShowToast({ message: `${err.response.data.message}`, type: 'error' });
               }))
             :
-            (axios.get(`http://localhost:8080/api/v2/tasks/due?due=${date}&by=${userName}&to=${assignedTo}&page=${currentPage}&pageSize=${taskPerPage}`)
-              .then((res) => { setTask(res?.data?.data); setTaskCount(res?.data?.count); console.log(`http://localhost:8080/api/v1/tasks/due?due=${date}&by=${userName}&to=${assignedTo}&page=${currentPage}&pageSize=${taskPerPage} `, res?.data?.data); })
+            (axios.get(`/v2/tasks/due?due=${date}&by=${userName}&to=${assignedTo}&page=${currentPage}&pageSize=${taskPerPage}`)
+              .then((res) => { setTask(res.data.data); setCount(res.data.count); })
               .catch((err) => {
-                toast.error(<b style={{ color: "#000" }} >{err.response?.data?.message}</b>, {
-                  className: css({
-                    background: "#pink"
-                  })
-                },
-                  {
-                    position: "top-center",
-                    autoClose: 1500,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: true,
-                    theme: "colored",
-                  });
+                ShowToast({ message: `${err.response.data.message}`, type: 'error' });
               }))
     }
-
-
   }
 
-
-  const handleFilterOff = () => {
-    setAssignedBy('')
-    setAssignedTo('')
-    setDate('')
-    setDuplicateDate(null)
-    setIsFilterOn(false);
-    getTasks();
-  }
-
+  //Function that handle dates ( handles date formates )
   const handleSelectedDate = (dateString) => {
-    const dateObj = new Date(dateString);
-    const year = dateObj.getFullYear();
-    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-    const day = String(dateObj.getDate()).padStart(2, '0');
-    const formattedDate = `${year}-${month}-${day}`;
-    setDate(formattedDate);
+    setDuplicateDate(dateString)
+    const formattedDateTime = moment(dateString).format('YYYY-MM-DD HH:mm:ss');
+    if (formattedDateTime === "Invalid date") {
+      setDate('');
+    } else {
+      setDate(formattedDateTime);
+    }
   }
 
+  useEffect(() => {
+    if (searchInput) {
+      getTaskBySearchInput();
+    }
+    else if (isFilterOn) {
+      handleFilterClick()
+    }
+    else {
+      setAssignedBy('')
+      setAssignedTo('')
+      setDate('')
+      setDuplicateDate(null)
+      getTasks();
+    }
+  }, [searchInput, currentPage, toOrBytoggleOption, recentEditHappen, isFilterOn])
+
+  useEffect(() => {
+    if (date || assignedBy || assignedTo) {
+      setIsDisabled(false);
+    } else {
+      setIsDisabled(true);
+    }
+  }, [date, assignedBy, assignedTo])
 
   return (
-    <div className={showTaskDescription ? "upcoming_container_after" : "upcoming_container"} >
-      {console.log("currentPage - > log - >", currentPage)}
+    <div className={showTaskDetails ? "upcoming_container_after" : "upcoming_container"} >
       <div className="upcoming_search_filter_wrapper">
-        <div className="search_container_upcoming">
-          <div className='search_bar_container'>
-            <div className="search_icons_wrapper" id='pointer'>
-              {searchInput ? <RxCross1 size={20} onClick={() => setSearchInput('')} /> : <LuSearch size={20} />}
-            </div>
-            <input className='search_input' type="text" placeholder='Search task title...' value={searchInput} onFocus={() => { setIsFilterOn(false); getTasks() }} onChange={(e) => { setCurrentPage(1); setSearchInput(e.target.value) }} />
-          </div>
-        </div>
+        <SearchBar
+          setSearchInput={setSearchInput}
+          searchInput={searchInput}
+        />
         <div className="filter_icon_item_upcoming"  >
-          <div id={isFilterOn ? "filter_icon_upcoming_active" : "filter_icon_upcoming"} onClick={handleFilterOff} >
-            <TbAdjustmentsHorizontal color="#696969" size={30} id='pointer' onClick={() => { setShowTaskDescription(false); (!isFilterOn && setShowUpcomingFilter((prev) => !prev)); }} />
+          <div id={isFilterOn ? "filter_icon_upcoming_active" : "filter_icon_upcoming"} onClick={() => setIsFilterOn(false)} >
+            <TbAdjustmentsHorizontal color="#696969" size={30} id='pointer' onClick={() => { setShowTaskDetails(false); (!isFilterOn && setShowUpcomingFilter((prev) => !prev)); }} />
           </div>
-          <Offcanvas className="upcoming_filter_canvas" show={showUpcomingFilter} onHide={handleCloseFilter} scroll={true} backdrop={false} placement="end" >
-            <div style={{ marginTop: "3vh" }} >
-              <Offcanvas.Header closeButton>
-                <Offcanvas.Title>
-                  <div className="filter_icon_item_in_sidebar">
-                    Filter
-                  </div>
-                </Offcanvas.Title>
-              </Offcanvas.Header>
+          <Filter
+            showFilter={showUpcomingFilter}
+            handleCloseFilter={handleCloseFilter}
+            setCurrentPage={setCurrentPage}
+            handleFilterClick={handleFilterClick}
+            isDisabled={isDisabled}
+          >
+            <div className="filter_wrapper">
+              <ToggleButton
+                option1={"Assigned date"}
+                option2={"Deadline"}
+                width="80%"
+                toggleOption={filterToggleOption}
+                handleToggleOption={handleFilterToggleButton}
+              />
             </div>
-            <Offcanvas.Body>
-              <div className="filter_wrapper">
-                <FilterToggleButton />
-              </div>
-              <div className="upcoming_canvas_body">
-                <DatePicker
-                  className="canvas_body_item_inbox date_inbox"
-                  onChange={(date) => { handleSelectedDate(date); setDuplicateDate(date) }}
-                  minDate={new Date()}
-                  selected={duplicateDate}
-                  placeholderText={filterToggleOption ? "Assigned Date" : "Deadline"}
-                />
-                {
-                  toOrBytoggleOption
-                    ?
-                    <input className="canvas_body_item" type="text" placeholder="Assigned by" onChange={(e) => { setAssignedBy(e.target.value); }} />
-                    :
-                    <input className="canvas_body_item" type="text" placeholder="Assigned to" onChange={(e) => { setAssignedTo(e.target.value); }} />
-                }
-              </div>
-              <div className="filter_button" >
-                <Button style={{ background: "#8D8B8B", border: "none", outline: "none" }} onClick={() => { setDuplicateDate(null); setCurrentPage(1); handleFilterClick() }} >Filter</Button>
-              </div>
-            </Offcanvas.Body>
-          </Offcanvas>
+            <div className="upcoming_canvas_body">
+              <DatePicker
+                className="canvas_body_item_inbox date_inbox"
+                onChange={(date) => { handleSelectedDate(date); setDuplicateDate(date) }}
+                minDate={new Date()}
+                selected={duplicateDate}
+                placeholderText={filterToggleOption ? "Assigned date" : "Deadline"}
+              />
+              {
+                toOrBytoggleOption
+                  ?
+                  <input className="canvas_body_item" type="text" placeholder="Assigned by" onChange={(e) => { setAssignedBy(e.target.value); }} />
+                  :
+                  <input className="canvas_body_item" type="text" placeholder="Assigned to" onChange={(e) => { setAssignedTo(e.target.value); }} />
+              }
+            </div>
+          </Filter>
         </div>
-
       </div>
-
-      <div className="diplay_task_wrapper_upcoming">
-        {task !== null
-          ?
-          <div className="show_task_with_page_wrapper_upcoming">
-            <div className="toggle_with_page_upcoming">
-              <div className="upcoming_title_container"><ToggleButtonForToMeOrByMe /> </div>
-              <div className="page_inside_upcoming">
-                <Pagination
-                  className="page"
-                  postsPerPage={taskPerPage}
-                  totalPosts={taskCount}
-                  paginate={paginate}
-                  currentPage={currentPage}
-                />
-              </div>
-            </div>
-            <div className="show_task_wrapper_in_upcoming">
-              <DisplayTask task={task} />
-            </div>
-          </div>
-          :
-          <div className='loader' >
-            <Skeleton height={100} />
-            <Skeleton height={100} />
-            <Skeleton height={100} />
-            <Skeleton height={100} />
-            <Skeleton height={100} />
-            <Skeleton height={100} />
-            <Skeleton height={100} />
-          </div>
-        }
-      </div>
+      <TaskDisplayWithPagination
+        toOrBytoggleOption={toOrBytoggleOption}
+        handleToOrBytoggleOption={handleToOrBytoggleOption}
+        count={count}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        task={task}
+      />
     </div>
   )
 }

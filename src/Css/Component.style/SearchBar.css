@@ -1,0 +1,35 @@
+
+.search_container_inbox {
+    flex: 80%;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    border-radius: 5px;
+
+}
+
+.search_bar_container_inbox{
+    height: 5vh;
+    width: 100%;
+    display: flex;
+    gap: 5px;
+    overflow: hidden;
+    padding: 0 2px;
+    overflow: hidden;
+}
+
+.search_icons_wrapper_inbox{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    border-radius: 50%;
+    aspect-ratio: 1 / 1;
+}
+
+.search_input{
+    height: 100%;
+    border: none;
+    outline: none;
+    padding: 0 4px;
+    width: 100%;
+    font-size: 14px;
+}
