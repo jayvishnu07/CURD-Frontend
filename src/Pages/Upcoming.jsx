@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
 //libraries
-import axios from 'axios'
 import moment from 'moment-timezone';
 import DatePicker from "react-datepicker";
 
@@ -15,11 +14,12 @@ import { TbAdjustmentsHorizontal } from 'react-icons/tb';
 
 //custom components
 import { ContextState } from "../ContextApi/ContextApi";
-import ShowToast from '../Components/ShowToast';
 import Filter from '../Components/Filter';
 import ToggleButton from '../Components/ToggleButton';
 import SearchBar from '../Components/SearchBar';
 import TaskDisplayWithPagination from '../Components/TaskDisplayWithPagination';
+import { makeGetRequest } from '../APIRequest/APIRequest';
+import { API_VERSION_V1, API_VERSION_V2 } from '../utils/config';
 
 
 const Upcoming = () => {
@@ -61,48 +61,23 @@ const Upcoming = () => {
 
   const handleCloseFilter = () => setShowUpcomingFilter(false)
 
+  //Date formate
+  const dateformate = "YYYY-MM-DD";
+
+
   //Get all tasks
   const getTasks = () => {
     const currentDate = new Date();
-    const formattedDate = moment(currentDate).format('YYYY-MM-DD');
-
-    if (toOrBytoggleOption) {
-      axios.get(`/v2/tasks/starts-after/${formattedDate}?to=${userName}&page=${currentPage}&pageSize=${taskPerPage}`)
-        .then((res) => { setTask(res.data.data); setCount(res.data.count); })
-        .catch((err) => {
-          ShowToast({ message: `${err.response.data.message}`, type: 'error' });
-        })
-    }
-    else if (!toOrBytoggleOption) {
-      axios.get(`/v2/tasks/starts-after/${formattedDate}?by=${userName}&page=${currentPage}&pageSize=${taskPerPage}`)
-        .then((res) => { setTask(res.data.data); setCount(res.data.count); })
-        .catch((err) => {
-          ShowToast({ message: `${err.response.data.message}`, type: 'error' });
-        })
-    }
+    const formattedDate = moment(currentDate).format(dateformate);
+    makeGetRequest(`${API_VERSION_V2}/after/${formattedDate}?${toOrBytoggleOption ? 'to' : 'by'}=${userName}&page=${currentPage}&pageSize=${taskPerPage}`, setTask, setCount)
   }
 
   //Get searched tasks
   const getTaskBySearchInput = () => {
     const currentDate = new Date();
-    const formattedDate = moment(currentDate).format('YYYY-MM-DD');
-
+    const formattedDate = moment(currentDate).format(dateformate);
     setCurrentPage(1);
-
-    if (toOrBytoggleOption) {
-      axios.get(`/v1/tasks/upcoming/created/title/${searchInput}?created=${formattedDate}&to=${userName}&page=${currentPage}&pageSize=${taskPerPage}`)
-        .then((res) => { setTask(res.data.data); setCount(res.data.count); })
-        .catch((err) => {
-          ShowToast({ message: `${err.response.data.message}`, type: 'error' });
-        })
-    }
-    else if (!toOrBytoggleOption) {
-      axios.get(`/v1/tasks/upcoming/created/title/${searchInput}?created=${formattedDate}&by=${userName}&page=${currentPage}&pageSize=${taskPerPage}`)
-        .then((res) => { setTask(res.data.data); setCount(res.data.count); })
-        .catch((err) => {
-          ShowToast({ message: `${err.response.data.message}`, type: 'error' });
-        })
-    }
+    makeGetRequest(`${API_VERSION_V1}/upcoming/${searchInput}?created=${formattedDate}&${toOrBytoggleOption ? 'to' : 'by'}=${userName}&page=${currentPage}&pageSize=${taskPerPage}`, setTask, setCount)
   }
 
 
@@ -129,42 +104,14 @@ const Upcoming = () => {
     }
 
     if (date || assignedBy || assignedTo) {
-      toOrBytoggleOption && filterToggleOption
-        ?
-        (axios.get(`/v2/tasks/created?created=${date}&by=${assignedBy}&to=${userName}&page=${currentPage}&pageSize=${taskPerPage}`)
-          .then((res) => { setTask(res.data.data); setCount(res.data.count); })
-          .catch((err) => {
-            ShowToast({ message: `${err.response.data.message}`, type: 'error' });
-          }))
-        :
-        toOrBytoggleOption && !filterToggleOption
-          ?
-          (axios.get(`/v2/tasks/due?due=${date}&by=${assignedBy}&to=${userName}&page=${currentPage}&pageSize=${taskPerPage}`)
-            .then((res) => { setTask(res.data.data); setCount(res.data.count); })
-            .catch((err) => {
-              ShowToast({ message: `${err.response.data.message}`, type: 'error' });
-            }))
-          :
-          !toOrBytoggleOption && filterToggleOption
-            ?
-            (axios.get(`/v2/tasks/created?created=${date}&by=${userName}&to=${assignedTo}&page=${currentPage}&pageSize=${taskPerPage}`)
-              .then((res) => { setTask(res.data.data); setCount(res.data.count); })
-              .catch((err) => {
-                ShowToast({ message: `${err.response.data.message}`, type: 'error' });
-              }))
-            :
-            (axios.get(`/v2/tasks/due?due=${date}&by=${userName}&to=${assignedTo}&page=${currentPage}&pageSize=${taskPerPage}`)
-              .then((res) => { setTask(res.data.data); setCount(res.data.count); })
-              .catch((err) => {
-                ShowToast({ message: `${err.response.data.message}`, type: 'error' });
-              }))
+      makeGetRequest(`${API_VERSION_V2}/${filterToggleOption ? "created?created" : "due?due"}=${date}&by=${toOrBytoggleOption ? assignedBy : userName}&to=${toOrBytoggleOption ? userName : assignedTo}&page=${currentPage}&pageSize=${taskPerPage}`, setTask, setCount)
     }
   }
 
   //Function that handle dates ( handles date formates )
   const handleSelectedDate = (dateString) => {
     setDuplicateDate(dateString)
-    const formattedDateTime = moment(dateString).format('YYYY-MM-DD HH:mm:ss');
+    const formattedDateTime = moment(dateString).format(dateformate);
     if (formattedDateTime === "Invalid date") {
       setDate('');
     } else {

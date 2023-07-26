@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 //libraries
 import { Button, Offcanvas } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import axios from 'axios';
 import moment from 'moment-timezone';
 import DatePicker from "react-datepicker";
 
@@ -14,6 +13,8 @@ import "react-datepicker/dist/react-datepicker.css";
 //custom components
 import { ContextState } from "../ContextApi/ContextApi";
 import ShowToast from '../Components/ShowToast';
+import { makePostRequest } from "../APIRequest/APIRequest";
+import { API_VERSION_V2 } from "../utils/config";
 
 //react icons
 import { SlMenu } from "react-icons/sl";
@@ -52,6 +53,9 @@ const Navbar = () => {
   //state to disable enter button 
   const [isAddButtonDisabled, setIsAddButtonDisabled] = useState(true)
 
+  //Date with time formate
+  const dateFormate = 'YYYY-MM-DD HH:mm:ss';
+
 
   const handleMenuClick = () => {
     setShowSidebar((prev) => !prev)
@@ -79,16 +83,9 @@ const Navbar = () => {
   const handleAddTask = () => {
     setSelectedTask([]);
     if (taskTitle && assignedDate && due && priority && assignedTo) {
-      axios.post(`/v2/tasks`, {
-        taskTitle: taskTitle,
-        assignedDate: assignedDate,
-        assignedTo: assignedTo,
-        due: due,
-        assignedBy: userName,
-        priority: priority,
-      })
-        .then((res) => {
-          ShowToast({ message: res.data.message, type: 'success' });
+
+      const callbacks = {
+        onSuccess: (res) => {
           setShowAddTask(false);
           setTaskTitle('')
           setAssignedDate('')
@@ -98,17 +95,26 @@ const Navbar = () => {
           setDuplicateDue(null)
           setDuplicateAssignedDate(null)
           setRecentEditHappen((prev) => !prev)
-        })
-        .catch((err) => {
-          ShowToast({ message: `${err.response.data.message}`, type: 'error' });
-        })
+        }
+      }
+
+      makePostRequest(`${API_VERSION_V2}`, {
+        taskTitle: taskTitle,
+        assignedDate: assignedDate,
+        assignedTo: assignedTo,
+        due: due,
+        assignedBy: userName,
+        priority: priority,
+      },
+        callbacks
+      )
     }
   }
 
   //Function that handle dates ( handles date formates )
   const handleSelectedDate = (dateTime, setDuplicateDate, setDate) => {
     setDuplicateDate(dateTime)
-    const formattedDateTime = moment(dateTime).format('YYYY-MM-DD HH:mm:ss');
+    const formattedDateTime = moment(dateTime).format(dateFormate);
     if (formattedDateTime === "Invalid date") {
       setDate('');
     } else {

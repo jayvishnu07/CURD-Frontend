@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 //libraries
 import DatePicker from "react-datepicker";
 import moment from 'moment-timezone';
-import axios from 'axios'
 
 //style sheets
 import '../Css/Pages.style/Today.css'
@@ -13,10 +12,11 @@ import "react-datepicker/dist/react-datepicker.css";
 
 //custom components
 import { ContextState } from "../ContextApi/ContextApi";
-import ShowToast from '../Components/ShowToast';
 import Filter from '../Components/Filter';
 import SearchBar from '../Components/SearchBar';
 import TaskDisplayWithPagination from '../Components/TaskDisplayWithPagination';
+import { makeGetRequest } from '../APIRequest/APIRequest';
+import { API_VERSION_V1, API_VERSION_V2 } from '../utils/config';
 
 //react icons
 import { TbAdjustmentsHorizontal } from 'react-icons/tb';
@@ -56,6 +56,8 @@ const Today = () => {
   //state to disable enter button 
   const [isDisabled, setIsDisabled] = useState(true)
 
+  //Date formate
+  const dateformate = "YYYY-MM-DD";
 
   const handleCloseFilter = () => {
     setShowTodayFilter(false)
@@ -65,44 +67,17 @@ const Today = () => {
   //Get all tasks
   const getTask = () => {
     const currentDate = new Date();
-    const formattedDate = moment(currentDate).format('YYYY-MM-DD');
+    const formattedDate = moment(currentDate).format(dateformate);
 
     if (isFilterOn) return;
-
-    if (toOrBytoggleOption) {
-      axios.get(`/v1/tasks/created?created=${formattedDate}&to=${userName}&page=${currentPage}&pageSize=${taskPerPage}`)
-        .then((res) => { if (!isFilterOn) { setTask(res.data.data); setCount(res.data.count); } })
-        .catch((err) => {
-          ShowToast({ message: `${err.response.data.message}`, type: 'error' });
-        })
-    }
-    else if (!toOrBytoggleOption) {
-      axios.get(`/v1/tasks/created?created=${formattedDate}&by=${userName}&page=${currentPage}&pageSize=${taskPerPage}`)
-        .then((res) => { if (!isFilterOn) { setTask(res.data.data); setCount(res.data.count); } })
-        .catch((err) => {
-          ShowToast({ message: `${err.response.data.message}`, type: 'error' });
-        })
-    }
+    makeGetRequest(`${API_VERSION_V1}/created?created=${formattedDate}&${toOrBytoggleOption ? 'to' : 'by'}=${userName}&page=${currentPage}&pageSize=${taskPerPage}`, setTask, setCount)
   }
 
   //Get searched tasks
   const getTaskBySearchInput = () => {
     const currentDate = new Date();
-    const formattedDate = moment(currentDate).format('YYYY-MM-DD');
-
-    if (toOrBytoggleOption) {
-      axios.get(`/v2/tasks/created/${searchInput}?created=${formattedDate}&to=${userName}&page=${currentPage}&pageSize=${taskPerPage}`)
-        .then((res) => { setTask(res.data.data); setCount(res.data.count); })
-        .catch((err) => {
-          ShowToast({ message: `${err.response.data.message}`, type: 'error' });
-        })
-    } else if (!toOrBytoggleOption) {
-      axios.get(`/v2/tasks/created/${searchInput}?created=${formattedDate}&by=${userName}&page=${currentPage}&pageSize=${taskPerPage}`)
-        .then((res) => { setTask(res.data.data); setCount(res.data.count); })
-        .catch((err) => {
-          ShowToast({ message: `${err.response.data.message}`, type: 'error' });
-        })
-    }
+    const formattedDate = moment(currentDate).format(dateformate);
+    makeGetRequest(`${API_VERSION_V2}/created/${searchInput}?created=${formattedDate}&${toOrBytoggleOption ? 'to' : 'by'}=${userName}&page=${currentPage}&pageSize=${taskPerPage}`, setTask, setCount)
   }
 
   //Toggel button [ Task to me | Task by me ]
@@ -125,28 +100,15 @@ const Today = () => {
     }
     else if (date || assignedBy || assignedTo) {
       const currentDate = new Date();
-      const formattedDate = moment(currentDate).format('YYYY-MM-DD');
-
-      toOrBytoggleOption
-        ?
-        (axios.get(`/v1/tasks/today/${formattedDate}?due=${date}&to=${userName}&by=${assignedBy}&page=${currentPage}&pageSize=${taskPerPage}`)
-          .then((res) => { setTask(res.data.data); setCount(res.data.count); })
-          .catch((err) => {
-            ShowToast({ message: `${err.response.data.message}`, type: 'error' });
-          }))
-        :
-        (axios.get(`/v1/tasks/today/${formattedDate}?due=${date}&to=${assignedTo}&by=${userName}&page=${currentPage}&pageSize=${taskPerPage}`)
-          .then((res) => { setTask(res.data.data); setCount(res.data.count); })
-          .catch((err) => {
-            ShowToast({ message: `${err.response.data.message}`, type: 'error' });
-          }))
+      const formattedDate = moment(currentDate).format(dateformate);
+      makeGetRequest(`${API_VERSION_V1}/today/${formattedDate}?due=${date}&to=${toOrBytoggleOption ? userName : assignedTo}&by=${toOrBytoggleOption ? assignedBy : userName}&page=${currentPage}&pageSize=${taskPerPage}`, setTask, setCount)
     }
   }
 
   //Function that handle dates ( handles date formates )
   const handleSelectedDate = (dateString) => {
     setDuplicateDate(dateString)
-    const formattedDateTime = moment(dateString).format('YYYY-MM-DD HH:mm:ss');
+    const formattedDateTime = moment(dateString).format(dateformate);
     if (formattedDateTime === "Invalid date") {
       setDate('');
     } else {

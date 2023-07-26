@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 
 //libraries
 import moment from 'moment-timezone';
-import axios from 'axios';
 import { Button } from 'react-bootstrap';
 import DatePicker from "react-datepicker";
 
@@ -11,8 +10,9 @@ import '../Css/Component.style/ShowTaskDetails.css'
 import "react-datepicker/dist/react-datepicker.css";
 
 //custom components
-import ShowToast from './ShowToast';
 import { ContextState } from "../ContextApi/ContextApi";
+import { makePutRequest } from '../APIRequest/APIRequest';
+import { API_VERSION_V1 } from '../utils/config';
 
 //react icons
 import { AiOutlineCloseCircle } from "react-icons/ai";
@@ -52,41 +52,43 @@ const ShowTaskDetails = () => {
   const [duplicateAssignedDate, setDuplicateAssignedDate] = useState(null)
   const [duplicateDue, setDuplicateDue] = useState(null)
 
+  //Date with time formate
+  const dateFormate = 'YYYY-MM-DD HH:mm:ss';
+
   const handleReturnClick = () => {
     setShowTaskDetails(false)
   }
 
   // Function to edit task
   const handleEdit = (id) => {
-    axios.put(`/v1/tasks/id/${id}`, {
+
+    const callbacks = {
+      onSuccess: (res) => {
+        setSelectedTask(res?.data?.data[0]);
+        setEditMode(false);
+        setRecentEditHappen(prev => !prev);
+        setShowTaskDetails(false);
+        setDuplicateAssignedDate(null);
+        setDuplicateDue(null);
+      }
+    }
+
+    makePutRequest(`${API_VERSION_V1}/id/${id}`, {
       assignedBy: assignedBy ? assignedBy : selectedTask.assignedBy,
       assignedTo: assignedTo ? assignedTo : selectedTask.assignedTo,
       taskTitle: taskTitle ? taskTitle : selectedTask.taskTitle,
       assignedDate: assignedDate ? assignedDate : selectedTask.assignedDate,
       due: due ? due : selectedTask.due,
       priority: priority ? priority : selectedTask.priority,
-    })
-      .then((res) => {
-        setSelectedTask((res.data.data).at(0));
-        setEditMode(false);
-        setRecentEditHappen((prev) => !prev);
-        setShowTaskDetails(false);
-        setDuplicateAssignedDate(null)
-        setDuplicateDue(null)
-        if (assignedBy || taskTitle || assignedDate || due || priority) {
-          ShowToast({ message: `Edited successfully.`, type: 'success' });
-        }
-      })
-      .catch((err) => {
-        ShowToast({ message: `${err.response.data.message}`, type: 'error' });
-      })
-
+    },
+      callbacks
+    )
   }
 
   //Function that handle dates ( handles date formates )
   const handleSelectedDate = (dateString, setDuplicateDate, setDate) => {
     setDuplicateDate(dateString)
-    const formattedDateTime = moment(dateString).format('YYYY-MM-DD HH:mm:ss');
+    const formattedDateTime = moment(dateString).format(dateFormate);
     if (formattedDateTime === "Invalid date") {
       setDate('');
     } else {
@@ -108,6 +110,29 @@ const ShowTaskDetails = () => {
       placeholderText={placeholder}
     />
   )
+
+  //Component to show table data
+  const TableInput = ({ Logo, size, color, label, data, editMode, children }) => {
+    return (
+      <tr>
+        <th className='first_child' ><Logo size={size} color={color} />{label}</th>
+        <td id='colon' >:</td>
+        <td className='third_child' >
+          {
+            editMode
+              ?
+              <>
+                {children}
+                {console.log(children)}
+              </>
+              :
+              data
+          }
+        </td>
+      </tr>
+    )
+  }
+
 
   useEffect(() => {
     if (assignedBy || assignedTo || taskTitle || assignedDate || due || priority) {
@@ -143,56 +168,32 @@ const ShowTaskDetails = () => {
       <div className="selected_task_item_wrapper" >
         <table>
           <tbody>
-            <tr>
-              <th className='first_child' ><BiTask size={17} color='#2ecf0a' />Title</th>
-              <td id='colon' >:</td>
-              <td className='third_child' >{editMode ? <input className='edit_input_item' type="text" placeholder={selectedTask.taskTitle} onChange={e => setTaskTitle(e.target.value)} /> : selectedTask.taskTitle}</td>
-            </tr>
-            <tr>
-              <th className='first_child' ><BsCalendar2Date size={15} color='#0324fc' />Assigned date</th>
-              <td id='colon' >:</td>
-              <td className='third_child'>
-                {
-                  editMode
-                    ?
-                    <>
-                      <DateInput className='edit_input_item' setDate={setAssignedDate} setDuplicateDate={setDuplicateAssignedDate} placeholder='Assigned date' duplicateDate={duplicateAssignedDate} />
-                    </>
-                    : selectedTask.assignedDate
-                }
-              </td>
-            </tr>
-            <tr>
-              <th className='first_child' ><BsCalendar2Date size={15} color='#f74036' />Deadline</th>
-              <td id='colon' >:</td>
-              <td className='third_child' >
-                {
-                  editMode
-                    ?
-                    <>
-                      <DateInput setDate={setDue} setDuplicateDate={setDuplicateDue} placeholder={'Deadline'} duplicateDate={duplicateDue} />
-                    </>
-                    :
-                    selectedTask.due
-                }
-              </td>
-            </tr>
+            <TableInput Logo={BiTask} size={17} color='#2ecf0a' label={'Title'} data={selectedTask.taskTitle} editMode={editMode}>
+              <input className='edit_input_item' type="text" placeholder={selectedTask.taskTitle} onChange={e => setTaskTitle(e.target.value)} />
+            </TableInput>
+
+            <TableInput Logo={BsCalendar2Date} size={15} color='#0324fc' label={'Assigned date'} data={selectedTask.assignedDate} editMode={editMode}>
+              <DateInput className='edit_input_item' setDate={setAssignedDate} setDuplicateDate={setDuplicateAssignedDate} placeholder='Assigned date' duplicateDate={duplicateAssignedDate} />
+            </TableInput>
+
+            <TableInput Logo={BsCalendar2Date} size={15} color='#f74036' label={'Deadline'} data={selectedTask.due} editMode={editMode} >
+              <DateInput setDate={setDue} setDuplicateDate={setDuplicateDue} placeholder={'Deadline'} duplicateDate={duplicateDue} />
+            </TableInput>
+
             {
               userName === selectedTask.assignedBy
                 ?
-                <tr>
-                  <th className='first_child' ><BsPersonFill size={15} color='#2563f5' />Assigned to</th>
-                  <td id='colon' >:</td>
-                  <td className='third_child' >{editMode ? <input className='edit_input_item' type="text" placeholder={selectedTask.assignedTo} onChange={e => setAssignedTo(e.target.value)} /> : selectedTask.assignedTo}</td>
-                </tr>
+                <TableInput Logo={BsPersonFill} size={15} color='#2563f5' label={'Assigned to'} data={selectedTask.assignedTo} editMode={editMode}>
+                  <input className='edit_input_item' type="text" placeholder={selectedTask.assignedTo} onChange={e => setAssignedTo(e.target.value)} />
+                </TableInput>
                 :
-                !editMode &&
-                <tr>
-                  <th className='first_child' ><BsPersonFill size={15} color='#2563f5' />Assigned by</th>
-                  <td id='colon' >:</td>
-                  <td className='third_child' >{editMode ? <input className='edit_input_item' type="text" placeholder={selectedTask.assignedBy} onChange={e => setAssignedBy(e.target.value)} /> : selectedTask.assignedBy}</td>
-                </tr>
+                !editMode
+                &&
+                <TableInput Logo={BsPersonFill} size={15} color='#2563f5' label={'Assigned by'} data={selectedTask.assignedBy} editMode={editMode}>
+                  <input className='edit_input_item' type="text" placeholder={selectedTask.assignedBy} onChange={e => setAssignedBy(e.target.value)} />
+                </TableInput>
             }
+
             <tr>
               <th className='first_child' >{selectedTask.priority === 'high' ? <FcHighPriority /> : selectedTask.priority === 'medium' ? <FcMediumPriority /> : <FcLowPriority />}Priority</th>
               <td id='colon' >:</td>

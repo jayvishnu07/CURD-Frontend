@@ -15,9 +15,7 @@ import App from './App';
 import TaskContextProvider from './ContextApi/ContextApi';
 
 //axios base URL
-
 axios.defaults.baseURL = `http://localhost:8080/api`
-
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

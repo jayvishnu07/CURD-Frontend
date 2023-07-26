@@ -19,6 +19,7 @@ const TaskContextProvider = ({ children }) => {
     const [showUpcomingFilter, setShowUpcomingFilter] = useState(false);
     const [editMode, setEditMode] = useState(false)
     const [task, setTask] = useState(null)
+    const [count, setCount] = useState(0);
     const [recentEditHappen, setRecentEditHappen] = useState(false)
     const [currentUrl, setCurrentUrl] = useState('/')
     const [showAddTask, setShowAddTask] = useState(false);
@@ -46,6 +47,8 @@ const TaskContextProvider = ({ children }) => {
                 setShowTaskDetails,
                 task,
                 setTask,
+                count,
+                setCount,
                 showInboxFilter,
                 setShowInboxFilter,
                 showTodayFilter,
