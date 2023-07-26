@@ -6,7 +6,7 @@ import "../Css/Component.style/DisplayTask.css"
 //custom components
 import { ContextState } from '../ContextApi/ContextApi';
 import Model from './Model';
-import { makeDeleteRequest, makePutRequest } from '../APIRequest/APIRequest';
+import { makeDeleteRequest, makePutAndPostRequest } from '../APIRequest/APIRequest';
 import { API_VERSION_V1 } from '../utils/config';
 
 //react icons
@@ -58,7 +58,7 @@ const DisplayTask = ({ task }) => {
         setShowMakeCompleteModel(false)
       }
     }
-    makePutRequest(`${API_VERSION_V1}/id/${id}`, { isCompleted: true }, callbacks)
+    makePutAndPostRequest('PUT', `${API_VERSION_V1}/id/${id}`, { isCompleted: true }, callbacks)
   }
 
   // Funtion to delete task completed through model

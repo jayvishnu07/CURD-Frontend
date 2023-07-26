@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 //libraries
 import moment from 'moment-timezone';
@@ -11,7 +11,7 @@ import "react-datepicker/dist/react-datepicker.css";
 
 //custom components
 import { ContextState } from "../ContextApi/ContextApi";
-import { makePutRequest } from '../APIRequest/APIRequest';
+import { makePutAndPostRequest } from '../APIRequest/APIRequest';
 import { API_VERSION_V1 } from '../utils/config';
 
 //react icons
@@ -73,7 +73,7 @@ const ShowTaskDetails = () => {
       }
     }
 
-    makePutRequest(`${API_VERSION_V1}/id/${id}`, {
+    makePutAndPostRequest('PUT', `${API_VERSION_V1}/id/${id}`, {
       assignedBy: assignedBy ? assignedBy : selectedTask.assignedBy,
       assignedTo: assignedTo ? assignedTo : selectedTask.assignedTo,
       taskTitle: taskTitle ? taskTitle : selectedTask.taskTitle,
@@ -112,27 +112,23 @@ const ShowTaskDetails = () => {
   )
 
   //Component to show table data
-  const TableInput = ({ Logo, size, color, label, data, editMode, children }) => {
+  const TableInput = React.memo(({ Logo, size, color, label, data, editMode, children }) => {
     return (
       <tr>
         <th className='first_child' ><Logo size={size} color={color} />{label}</th>
         <td id='colon' >:</td>
-        <td className='third_child' >
-          {
-            editMode
-              ?
-              <>
-                {children}
-                {console.log(children)}
-              </>
-              :
-              data
-          }
-        </td>
+        {editMode ? (
+          <td className='third_child' >
+            {children}
+          </td>
+        ) : (
+          <td className='third_child'>
+            {data}
+          </td>
+        )}
       </tr>
-    )
-  }
-
+    );
+  });
 
   useEffect(() => {
     if (assignedBy || assignedTo || taskTitle || assignedDate || due || priority) {
@@ -168,57 +164,46 @@ const ShowTaskDetails = () => {
       <div className="selected_task_item_wrapper" >
         <table>
           <tbody>
-            <TableInput Logo={BiTask} size={17} color='#2ecf0a' label={'Title'} data={selectedTask.taskTitle} editMode={editMode}>
-              <input className='edit_input_item' type="text" placeholder={selectedTask.taskTitle} onChange={e => setTaskTitle(e.target.value)} />
-            </TableInput>
-
-            <TableInput Logo={BsCalendar2Date} size={15} color='#0324fc' label={'Assigned date'} data={selectedTask.assignedDate} editMode={editMode}>
-              <DateInput className='edit_input_item' setDate={setAssignedDate} setDuplicateDate={setDuplicateAssignedDate} placeholder='Assigned date' duplicateDate={duplicateAssignedDate} />
-            </TableInput>
-
-            <TableInput Logo={BsCalendar2Date} size={15} color='#f74036' label={'Deadline'} data={selectedTask.due} editMode={editMode} >
-              <DateInput setDate={setDue} setDuplicateDate={setDuplicateDue} placeholder={'Deadline'} duplicateDate={duplicateDue} />
-            </TableInput>
-
+            <tr>
+              <th className='first_child' ><BiTask size={17} color='#2ecf0a' />Task</th>
+              <td id='colon' >:</td>
+              <td className='third_child' >{editMode ? <input className='edit_input_item' type="text" placeholder={selectedTask.taskTitle} onChange={e => setTaskTitle(e.target.value)} /> : selectedTask.taskTitle}</td>
+            </tr>
+            <tr>
+              <th className='first_child' ><BsCalendar2Date size={15} color='#0324fc' />Assigned Date</th>
+              <td id='colon' >:</td>
+              <td className='third_child'  >{editMode ? <DateInput className='edit_input_item' setDate={setAssignedDate} setDuplicateDate={setDuplicateAssignedDate} placeholder='Assigned date' duplicateDate={duplicateAssignedDate} /> : selectedTask.assignedDate}</td>
+            </tr>
+            <tr>
+              <th className='first_child' ><BsCalendar2Date size={15} color='#f74036' />Deadline</th>
+              <td id='colon' >:</td>
+              <td className='third_child' >{editMode ? <DateInput setDate={setDue} setDuplicateDate={setDuplicateDue} placeholder={'Deadline'} duplicateDate={duplicateDue} /> : selectedTask.due}</td>
+            </tr>
             {
               userName === selectedTask.assignedBy
                 ?
-                <TableInput Logo={BsPersonFill} size={15} color='#2563f5' label={'Assigned to'} data={selectedTask.assignedTo} editMode={editMode}>
-                  <input className='edit_input_item' type="text" placeholder={selectedTask.assignedTo} onChange={e => setAssignedTo(e.target.value)} />
-                </TableInput>
+                <tr>
+                  <th className='first_child' ><BsPersonFill size={15} color='#2563f5' />Assigned to</th>
+                  <td id='colon' >:</td>
+                  <td className='third_child' >{editMode ? <input className='edit_input_item' type="text" placeholder={selectedTask.assignedTo} onChange={e => setAssignedTo(e.target.value)} /> : selectedTask.assignedTo}</td>
+                </tr>
                 :
-                !editMode
-                &&
-                <TableInput Logo={BsPersonFill} size={15} color='#2563f5' label={'Assigned by'} data={selectedTask.assignedBy} editMode={editMode}>
-                  <input className='edit_input_item' type="text" placeholder={selectedTask.assignedBy} onChange={e => setAssignedBy(e.target.value)} />
-                </TableInput>
+                !editMode &&
+                <tr>
+                  <th className='first_child' ><BsPersonFill size={15} color='#2563f5' />Assigned by</th>
+                  <td id='colon' >:</td>
+                  <td className='third_child' >{editMode ? <input className='edit_input_item' type="text" placeholder={selectedTask.assignedBy} onChange={e => setAssignedBy(e.target.value)} /> : selectedTask.assignedBy}</td>
+                </tr>
             }
-
             <tr>
               <th className='first_child' >{selectedTask.priority === 'high' ? <FcHighPriority /> : selectedTask.priority === 'medium' ? <FcMediumPriority /> : <FcLowPriority />}Priority</th>
               <td id='colon' >:</td>
               <td className='third_child' >{editMode ?
-                <select className='edit_input_item' id={priority ? "" : "make_priority_gray"} onChange={(e) => setPriority(e.target.value)}  >
+                <select className='edit_input_item' id={!priority && "make_priority_gray"} onChange={(e) => setPriority(e.target.value)}  >
                   <option disabled selected> {selectedTask.priority} </option>
-                  {selectedTask.priority === "low"
-                    ?
-                    <option selected value="low">Low</option>
-                    :
-                    <option value="low">Low</option>
-                  }
-                  {selectedTask.priority === "medium"
-                    ?
-                    <option selected value="medium">Medium</option>
-                    :
-                    <option value="medium">Medium</option>
-                  }
-                  {selectedTask.priority === "high"
-                    ?
-                    <option selected value="high">High</option>
-                    :
-                    <option value="high">High</option>
-                  }
-
+                  <option selected={selectedTask.priority === "low"} value="low">Low</option>
+                  <option selected={selectedTask.priority === "medium"} value="medium">Medium</option>
+                  <option selected={selectedTask.priority === "high"} value="high">High</option>
                 </select>
                 : selectedTask.priority}</td>
             </tr>
@@ -231,6 +216,7 @@ const ShowTaskDetails = () => {
                 <td className='third_child' >{editMode ? <input className='edit_input_item' type="text" placeholder={selectedTask.isCompleted ? "Completed" : "Incomplete"} /> : selectedTask.isCompleted ? "Completed" : "Incomplete"}</td>
               </tr>
             }
+
           </tbody>
         </table>
         {
@@ -246,4 +232,3 @@ const ShowTaskDetails = () => {
 }
 
 export default ShowTaskDetails
-

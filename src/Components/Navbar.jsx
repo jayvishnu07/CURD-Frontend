@@ -13,7 +13,7 @@ import "react-datepicker/dist/react-datepicker.css";
 //custom components
 import { ContextState } from "../ContextApi/ContextApi";
 import ShowToast from '../Components/ShowToast';
-import { makePostRequest } from "../APIRequest/APIRequest";
+import { makePutAndPostRequest } from "../APIRequest/APIRequest";
 import { API_VERSION_V2 } from "../utils/config";
 
 //react icons
@@ -98,7 +98,7 @@ const Navbar = () => {
         }
       }
 
-      makePostRequest(`${API_VERSION_V2}`, {
+      makePutAndPostRequest('POST', `${API_VERSION_V2}`, {
         taskTitle: taskTitle,
         assignedDate: assignedDate,
         assignedTo: assignedTo,

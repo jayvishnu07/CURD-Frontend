@@ -16,10 +16,22 @@ export const makeGetRequest = (url, setTask, setCount) => {
     })
 }
 
-export const makePutRequest = (url, data, callbacks) => {
+
+export const makeDeleteRequest = (url, setRecentEditHappen, setShowDeleteModel) => {
   axios({
     url,
-    method: 'PUT',
+    method: 'DELETE',
+  })
+    .then((res) => { setRecentEditHappen((prev) => !prev); setShowDeleteModel(false); ShowToast({ message: res?.data?.message, type: 'success' }); })
+    .catch((err) => {
+      ShowToast({ message: `${err.response.data.message}`, type: 'error' });
+    })
+}
+
+export const makePutAndPostRequest = (method, url, data, callbacks) => {
+  axios({
+    url,
+    method,
     data
   })
     .then((res) => {
@@ -33,33 +45,6 @@ export const makePutRequest = (url, data, callbacks) => {
     })
 }
 
-export const makeDeleteRequest = (url, setRecentEditHappen, setShowDeleteModel) => {
-  axios({
-    url,
-    method: 'DELETE',
-  })
-    .then((res) => { setRecentEditHappen((prev) => !prev); setShowDeleteModel(false); ShowToast({ message: res?.data?.message, type: 'success' }); })
-    .catch((err) => {
-      ShowToast({ message: `${err.response.data.message}`, type: 'error' });
-    })
-}
-
-export const makePostRequest = (url, data, callbacks) => {
-  axios({
-    url,
-    method: 'POST',
-    data
-  })
-    .then((res) => {
-      if (callbacks.onSuccess && typeof callbacks.onSuccess === 'function') {
-        callbacks.onSuccess();
-        ShowToast({ message: res?.data?.message, type: 'success' });
-
-      }
-    }).catch((err) => {
-      ShowToast({ message: `${err.response.data.message}`, type: 'error' });
-    })
-}
 
 
 
