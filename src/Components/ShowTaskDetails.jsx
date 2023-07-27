@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 //libraries
 import moment from 'moment-timezone';
@@ -13,6 +13,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { ContextState } from "../ContextApi/ContextApi";
 import { makePutAndPostRequest } from '../APIRequest/APIRequest';
 import { API_VERSION_V1 } from '../utils/config';
+import TableInput from './TableInput';
 
 //react icons
 import { AiOutlineCloseCircle } from "react-icons/ai";
@@ -111,25 +112,6 @@ const ShowTaskDetails = () => {
     />
   )
 
-  //Component to show table data
-  const TableInput = React.memo(({ Logo, size, color, label, data, editMode, children }) => {
-    return (
-      <tr>
-        <th className='first_child' ><Logo size={size} color={color} />{label}</th>
-        <td id='colon' >:</td>
-        {editMode ? (
-          <td className='third_child' >
-            {children}
-          </td>
-        ) : (
-          <td className='third_child'>
-            {data}
-          </td>
-        )}
-      </tr>
-    );
-  });
-
   useEffect(() => {
     if (assignedBy || assignedTo || taskTitle || assignedDate || due || priority) {
       setIsSaveButtonDisable(false)
@@ -138,7 +120,6 @@ const ShowTaskDetails = () => {
       setIsSaveButtonDisable(true)
     }
   }, [assignedBy, assignedTo, taskTitle, assignedDate, due, priority])
-
 
   return (
     <div className={showTaskDetails ? 'show_task_desc_container_after' : "show_task_desc_container"}>
@@ -164,59 +145,61 @@ const ShowTaskDetails = () => {
       <div className="selected_task_item_wrapper" >
         <table>
           <tbody>
-            <tr>
-              <th className='first_child' ><BiTask size={17} color='#2ecf0a' />Task</th>
-              <td id='colon' >:</td>
-              <td className='third_child' >{editMode ? <input className='edit_input_item' type="text" placeholder={selectedTask.taskTitle} onChange={e => setTaskTitle(e.target.value)} /> : selectedTask.taskTitle}</td>
-            </tr>
-            <tr>
-              <th className='first_child' ><BsCalendar2Date size={15} color='#0324fc' />Assigned Date</th>
-              <td id='colon' >:</td>
-              <td className='third_child'  >{editMode ? <DateInput className='edit_input_item' setDate={setAssignedDate} setDuplicateDate={setDuplicateAssignedDate} placeholder='Assigned date' duplicateDate={duplicateAssignedDate} /> : selectedTask.assignedDate}</td>
-            </tr>
-            <tr>
-              <th className='first_child' ><BsCalendar2Date size={15} color='#f74036' />Deadline</th>
-              <td id='colon' >:</td>
-              <td className='third_child' >{editMode ? <DateInput setDate={setDue} setDuplicateDate={setDuplicateDue} placeholder={'Deadline'} duplicateDate={duplicateDue} /> : selectedTask.due}</td>
-            </tr>
+
+            <TableInput data={selectedTask.taskTitle} editMode={editMode}>
+              <BiTask size={17} color='#2ecf0a' /> Task
+              <input className='edit_input_item' type="text" placeholder={selectedTask.taskTitle} onChange={e => setTaskTitle(e.target.value)} />
+            </TableInput>
+
+            <TableInput data={selectedTask.assignedDate} editMode={editMode}>
+              <BsCalendar2Date size={15} color='#0324fc' /> Assigned Date
+              <DateInput className='edit_input_item' setDate={setAssignedDate} setDuplicateDate={setDuplicateAssignedDate} placeholder='Assigned date' duplicateDate={duplicateAssignedDate} />
+            </TableInput>
+
+            <TableInput data={selectedTask.due} editMode={editMode} >
+              <BsCalendar2Date size={15} color='#f74036' /> Deadline
+              <DateInput setDate={setDue} setDuplicateDate={setDuplicateDue} placeholder={'Deadline'} duplicateDate={duplicateDue} />
+            </TableInput>
+
             {
               userName === selectedTask.assignedBy
                 ?
-                <tr>
-                  <th className='first_child' ><BsPersonFill size={15} color='#2563f5' />Assigned to</th>
-                  <td id='colon' >:</td>
-                  <td className='third_child' >{editMode ? <input className='edit_input_item' type="text" placeholder={selectedTask.assignedTo} onChange={e => setAssignedTo(e.target.value)} /> : selectedTask.assignedTo}</td>
-                </tr>
+                <TableInput data={selectedTask.assignedTo} editMode={editMode}>
+                  <BsPersonFill size={15} color='#2563f5' /> Assigned to
+                  <input className='edit_input_item' type="text" placeholder={selectedTask.assignedTo} onChange={e => setAssignedTo(e.target.value)} />
+                </TableInput>
                 :
-                !editMode &&
-                <tr>
-                  <th className='first_child' ><BsPersonFill size={15} color='#2563f5' />Assigned by</th>
-                  <td id='colon' >:</td>
-                  <td className='third_child' >{editMode ? <input className='edit_input_item' type="text" placeholder={selectedTask.assignedBy} onChange={e => setAssignedBy(e.target.value)} /> : selectedTask.assignedBy}</td>
-                </tr>
+                !editMode
+                &&
+                <TableInput data={selectedTask.assignedBy} editMode={editMode}>
+                  <BsPersonFill size={15} color='#2563f5' />Assigned by
+                  <input className='edit_input_item' type="text" placeholder={selectedTask.assignedBy} onChange={e => setAssignedBy(e.target.value)} />
+                </TableInput>
             }
-            <tr>
-              <th className='first_child' >{selectedTask.priority === 'high' ? <FcHighPriority /> : selectedTask.priority === 'medium' ? <FcMediumPriority /> : <FcLowPriority />}Priority</th>
-              <td id='colon' >:</td>
-              <td className='third_child' >{editMode ?
-                <select className='edit_input_item' id={!priority && "make_priority_gray"} onChange={(e) => setPriority(e.target.value)}  >
-                  <option disabled selected> {selectedTask.priority} </option>
-                  <option selected={selectedTask.priority === "low"} value="low">Low</option>
-                  <option selected={selectedTask.priority === "medium"} value="medium">Medium</option>
-                  <option selected={selectedTask.priority === "high"} value="high">High</option>
-                </select>
-                : selectedTask.priority}</td>
-            </tr>
+
+            <TableInput data={selectedTask.assignedBy} editMode={editMode}>
+              {selectedTask.priority === 'high' ? <FcHighPriority /> : selectedTask.priority === 'medium' ? <FcMediumPriority /> : <FcLowPriority />}Priority
+              {
+                editMode
+                  ?
+                  <select className='edit_input_item' id={!priority && "make_priority_gray"} onChange={(e) => setPriority(e.target.value)}  >
+                    <option disabled selected> {selectedTask.priority} </option>
+                    <option selected={selectedTask.priority === "low"} value="low">Low</option>
+                    <option selected={selectedTask.priority === "medium"} value="medium">Medium</option>
+                    <option selected={selectedTask.priority === "high"} value="high">High</option>
+                  </select>
+                  :
+                  selectedTask.priority
+              }
+            </TableInput>
             {
               !editMode
               &&
-              <tr>
-                <th className='first_child'  >{selectedTask.isCompleted ? <GrStatusGood color='green' /> : <AiOutlineCloseCircle color='#f74036' />}Status</th>
-                <td id='colon' >:</td>
-                <td className='third_child' >{editMode ? <input className='edit_input_item' type="text" placeholder={selectedTask.isCompleted ? "Completed" : "Incomplete"} /> : selectedTask.isCompleted ? "Completed" : "Incomplete"}</td>
-              </tr>
+              <TableInput data={selectedTask.isCompleted ? "Completed" : "Incomplete"} editMode={editMode}>
+                {selectedTask.isCompleted ? <GrStatusGood color='green' /> : <AiOutlineCloseCircle color='#f74036' />}Status
+                {editMode ? <input className='edit_input_item' type="text" placeholder={selectedTask.isCompleted ? "Completed" : "Incomplete"} /> : selectedTask.isCompleted ? "Completed" : "Incomplete"}
+              </TableInput>
             }
-
           </tbody>
         </table>
         {
@@ -232,3 +215,8 @@ const ShowTaskDetails = () => {
 }
 
 export default ShowTaskDetails
+
+function TableRow({ }) {
+  return (<><th className='first_child'><BiTask size={17} color='#2ecf0a' />Task</th>
+    <td id='colon'>:</td></>);
+}

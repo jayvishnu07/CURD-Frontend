@@ -121,7 +121,6 @@ const DisplayTask = ({ task }) => {
                         ?
                         <>
                           <DisplayItem Logo={BsPersonFill} size={15} color={'#2563f5'} label={`Assigned To : ${obj.assignedTo}`} />
-                          {/* <span className="display_task_item" ><BsPersonFill size={15} color="#2563f5" /> {`Assigned To : ${obj.assignedTo}`}</span><br /> */}
                         </>
                         :
                         <>
